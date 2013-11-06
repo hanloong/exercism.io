@@ -11,6 +11,7 @@ class Phrase
       .each_with_object(Hash.new(0)) { |word, hash| hash[word] += 1 }
   end
 
+  private
   def strip_phrase phrase
     phrase.gsub(/[^0-9a-z,' ]/i, '')
       .gsub(',',' ')
