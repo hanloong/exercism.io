@@ -2,30 +2,33 @@ class DNA
 
   def initialize sequence
     @sequence = sequence.chars
-    list = {'A' => 0, 'T' => 0, 'C' => 0, 'G' => 0}
     @sequence.each do |c|
-      raise ArgumentError unless list.has_key?(c)
+      raise ArgumentError unless base_list.has_key?(c)
     end
   end
 
   def count search
-    list = {'U' => 0, 'A' => 0, 'T' => 0, 'C' => 0, 'G' => 0}
-    if search.empty? || list.has_key?(search)
-      sum = 0
-      @sequence.each do |c|
-        sum += 1 if search == c
-      end
-      sum
-    else
-      raise ArgumentError
-    end
+    raise ArgumentError and return false unless valid_search?(search)
+    @sequence.count { |c| search == c }
   end
 
   def nucleotide_counts
-    list = {'A' => 0, 'T' => 0, 'C' => 0, 'G' => 0}
-    @sequence.each do |char|
-      list[char.to_s] += 1
-    end
-    list
+    base_list.map { |key, value|
+      {key => @sequence.select{ |c| key == c}.size }
+    }.reduce(:merge)
+  end
+
+  private
+
+  def valid_search?(search)
+    search.empty? || full_list.has_key?(search)
+  end
+
+  def base_list
+    {'A' => 0, 'T' => 0, 'C' => 0, 'G' => 0}
+  end
+
+  def full_list
+    {'U' => 0}.merge(base_list)
   end
 end
